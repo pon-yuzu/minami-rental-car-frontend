@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="みなみレンタカー奄美の在庫確認システム。貸出日時と返却日時を入力して、レンタカーの在庫状況をリアルタイムで確認できます。">
+    <meta name="keywords" content="みなみレンタカー, 奄美, レンタカー, 在庫確認, 予約">
+    <meta name="author" content="みなみレンタカー">
+
+    <!-- Open Graph / SNS共有用 -->
+    <meta property="og:title" content="みなみレンタカー 在庫確認システム">
+    <meta property="og:description" content="レンタカーの在庫状況をリアルタイムで確認">
+    <meta property="og:type" content="website">
+
+    <title>みなみレンタカー 在庫確認 | 奄美大島のレンタカー</title>
+
+    <!-- Google Fonts: Noto Sans JP -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- スタイルシート -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- ヘッダー -->
+        <header class="header">
+            <h1 class="header-title">みなみレンタカー</h1>
+            <p class="header-subtitle">在庫確認システム</p>
+        </header>
+
+        <!-- メインコンテンツ -->
+        <main class="main-content">
+            <!-- 在庫確認フォーム -->
+            <form id="availabilityForm" class="availability-form" aria-label="レンタカー在庫確認フォーム">
+
+                <!-- 貸出情報セクション -->
+                <section class="form-section">
+                    <h2 class="section-title">貸出情報</h2>
+
+                    <div class="form-row">
+                        <!-- 貸出日 -->
+                        <div class="form-group">
+                            <label for="pickupDate" class="form-label">
+                                貸出日<span class="required" aria-label="必須">*</span>
+                            </label>
+                            <input
+                                type="date"
+                                id="pickupDate"
+                                name="pickupDate"
+                                class="form-input"
+                                required
+                                aria-required="true"
+                                aria-describedby="pickupDateHelp"
+                            >
+                            <small id="pickupDateHelp" class="form-help">貸出日を選択してください</small>
+                        </div>
+
+                        <!-- 貸出時刻 -->
+                        <div class="form-group">
+                            <label for="pickupTime" class="form-label">
+                                貸出時刻<span class="required" aria-label="必須">*</span>
+                            </label>
+                            <select
+                                id="pickupTime"
+                                name="pickupTime"
+                                class="form-select"
+                                required
+                                aria-required="true"
+                                aria-describedby="pickupTimeHelp"
+                            >
+                                <option value="">選択してください</option>
+                                <option value="09:00">09:00</option>
+                                <option value="09:30">09:30</option>
+                                <option value="10:00">10:00</option>
+                                <option value="10:30">10:30</option>
+                                <option value="11:00">11:00</option>
+                                <option value="11:30">11:30</option>
+                                <option value="12:00">12:00</option>
+                                <option value="12:30">12:30</option>
+                                <option value="13:00">13:00</option>
+                                <option value="13:30">13:30</option>
+                                <option value="14:00">14:00</option>
+                                <option value="14:30">14:30</option>
+                                <option value="15:00">15:00</option>
+                                <option value="15:30">15:30</option>
+                                <option value="16:00">16:00</option>
+                                <option value="16:30">16:30</option>
+                                <option value="17:00">17:00</option>
+                                <option value="17:30">17:30</option>
+                                <option value="18:00">18:00</option>
+                            </select>
+                            <small id="pickupTimeHelp" class="form-help">貸出時刻を選択してください</small>
+                        </div>
+                    </div>
+
+                    <!-- 貸出店舗 -->
+                    <div class="form-group">
+                        <label for="pickupBranch" class="form-label">
+                            貸出店舗<span class="required" aria-label="必須">*</span>
+                        </label>
+                        <select
+                            id="pickupBranch"
+                            name="pickupBranch"
+                            class="form-select"
+                            required
+                            aria-required="true"
+                            aria-describedby="pickupBranchHelp"
+                        >
+                            <option value="">選択してください</option>
+                            <option value="奄美空港店">奄美空港店</option>
+                            <option value="古仁屋港店">古仁屋港店</option>
+                            <option value="瀬相港店">瀬相港店</option>
+                        </select>
+                        <small id="pickupBranchHelp" class="form-help">貸出店舗を選択してください</small>
+                    </div>
+                </section>
+
+                <!-- 返却情報セクション -->
+                <section class="form-section">
+                    <h2 class="section-title">返却情報</h2>
+
+                    <div class="form-row">
+                        <!-- 返却日 -->
+                        <div class="form-group">
+                            <label for="returnDate" class="form-label">
+                                返却日<span class="required" aria-label="必須">*</span>
+                            </label>
+                            <input
+                                type="date"
+                                id="returnDate"
+                                name="returnDate"
+                                class="form-input"
+                                required
+                                aria-required="true"
+                                aria-describedby="returnDateHelp"
+                            >
+                            <small id="returnDateHelp" class="form-help">返却日を選択してください</small>
+                        </div>
+
+                        <!-- 返却時刻 -->
+                        <div class="form-group">
+                            <label for="returnTime" class="form-label">
+                                返却時刻<span class="required" aria-label="必須">*</span>
+                            </label>
+                            <select
+                                id="returnTime"
+                                name="returnTime"
+                                class="form-select"
+                                required
+                                aria-required="true"
+                                aria-describedby="returnTimeHelp"
+                            >
+                                <option value="">選択してください</option>
+                                <option value="09:00">09:00</option>
+                                <option value="09:30">09:30</option>
+                                <option value="10:00">10:00</option>
+                                <option value="10:30">10:30</option>
+                                <option value="11:00">11:00</option>
+                                <option value="11:30">11:30</option>
+                                <option value="12:00">12:00</option>
+                                <option value="12:30">12:30</option>
+                                <option value="13:00">13:00</option>
+                                <option value="13:30">13:30</option>
+                                <option value="14:00">14:00</option>
+                                <option value="14:30">14:30</option>
+                                <option value="15:00">15:00</option>
+                                <option value="15:30">15:30</option>
+                                <option value="16:00">16:00</option>
+                                <option value="16:30">16:30</option>
+                                <option value="17:00">17:00</option>
+                                <option value="17:30">17:30</option>
+                                <option value="18:00">18:00</option>
+                            </select>
+                            <small id="returnTimeHelp" class="form-help">返却時刻を選択してください</small>
+                        </div>
+                    </div>
+
+                    <!-- 返却店舗 -->
+                    <div class="form-group">
+                        <label for="returnBranch" class="form-label">
+                            返却店舗<span class="required" aria-label="必須">*</span>
+                        </label>
+                        <select
+                            id="returnBranch"
+                            name="returnBranch"
+                            class="form-select"
+                            required
+                            aria-required="true"
+                            aria-describedby="returnBranchHelp"
+                        >
+                            <option value="">選択してください</option>
+                            <option value="奄美空港店">奄美空港店</option>
+                            <option value="古仁屋港店">古仁屋港店</option>
+                            <option value="瀬相港店">瀬相港店</option>
+                        </select>
+                        <small id="returnBranchHelp" class="form-help">返却店舗を選択してください</small>
+                    </div>
+                </section>
+
+                <!-- 送信ボタン -->
+                <div class="form-actions">
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                        aria-label="在庫を確認する"
+                    >
+                        在庫を確認する
+                    </button>
+                </div>
+            </form>
+
+            <!-- ローディング表示 -->
+            <div id="loading" class="loading" role="status" aria-live="polite" style="display: none;">
+                <div class="loading-spinner"></div>
+                <p class="loading-text">在庫を確認中...</p>
+            </div>
+
+            <!-- 結果表示エリア -->
+            <div id="result" class="result" role="region" aria-live="polite" aria-atomic="true" style="display: none;">
+                <!-- JavaScriptで動的に結果が挿入されます -->
+            </div>
+        </main>
+
+        <!-- フッター -->
+        <footer class="footer">
+            <p class="footer-text">
+                &copy; 2025 みなみレンタカー |
+                <a href="https://minamimaru-amami.com/" target="_blank" rel="noopener noreferrer" class="footer-link">
+                    公式サイト
+                </a>
+            </p>
+        </footer>
+    </div>
+
+    <!-- JavaScriptファイルの読み込み -->
+    <script src="js/availability.js"></script>
+</body>
+</html>
