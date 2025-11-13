@@ -1,11 +1,11 @@
 /* ========================================
-   グローバル設定
+   グローバル設定 - スマホアプリ風UI
    ======================================== */
 
 /* カラーテーマ（CSS変数） */
 :root {
-    /* プライマリカラー（青色系） */
-    --color-primary-dark: #1e3a8a;
+    /* プライマリカラー（青色系グラデーション） */
+    --color-primary-dark: #1e40af;
     --color-primary: #3b82f6;
     --color-primary-light: #60a5fa;
     --color-primary-lighter: #93c5fd;
@@ -14,10 +14,14 @@
 
     /* セカンダリカラー */
     --color-success: #10b981;
+    --color-success-light: #d1fae5;
     --color-error: #ef4444;
+    --color-error-light: #fee2e2;
     --color-warning: #f59e0b;
 
     /* ニュートラルカラー */
+    --color-bg: #f8fafc;
+    --color-card: #ffffff;
     --color-gray-50: #f9fafb;
     --color-gray-100: #f3f4f6;
     --color-gray-200: #e5e7eb;
@@ -35,7 +39,7 @@
     --color-text-white: #ffffff;
 
     /* フォント */
-    --font-family: 'Noto Sans JP', sans-serif;
+    --font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
     /* スペーシング */
     --spacing-xs: 0.5rem;
@@ -43,17 +47,25 @@
     --spacing-md: 1rem;
     --spacing-lg: 1.5rem;
     --spacing-xl: 2rem;
-    --spacing-2xl: 3rem;
+    --spacing-2xl: 2.5rem;
+    --spacing-3xl: 3rem;
 
     /* ボーダー半径 */
-    --border-radius-sm: 0.375rem;
-    --border-radius-md: 0.5rem;
-    --border-radius-lg: 0.75rem;
+    --border-radius-sm: 0.5rem;
+    --border-radius-md: 0.75rem;
+    --border-radius-lg: 1rem;
+    --border-radius-xl: 1.5rem;
+    --border-radius-full: 9999px;
 
-    /* シャドウ */
+    /* シャドウ（Material Design風） */
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+    /* トランジション */
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* リセット＆ベーススタイル */
@@ -66,6 +78,8 @@
 html {
     font-size: 16px;
     scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -73,7 +87,7 @@ body {
     font-size: 1rem;
     line-height: 1.6;
     color: var(--color-text-primary);
-    background: linear-gradient(135deg, var(--color-primary-bg) 0%, var(--color-gray-50) 100%);
+    background: var(--color-bg);
     min-height: 100vh;
 }
 
@@ -82,51 +96,82 @@ body {
    ======================================== */
 
 .container {
-    max-width: 800px;
+    max-width: 600px;
     margin: 0 auto;
-    padding: var(--spacing-lg);
+    padding: var(--spacing-md);
+    min-height: 100vh;
 }
 
 /* ========================================
-   ヘッダー
+   ヘッダー - グラデーション背景
    ======================================== */
 
 .header {
     text-align: center;
-    margin-bottom: var(--spacing-2xl);
-    padding: var(--spacing-xl) var(--spacing-lg);
-    background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow-lg);
+    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-2xl) var(--spacing-lg);
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--shadow-xl);
     color: var(--color-text-white);
+    position: relative;
+    overflow: hidden;
+}
+
+.header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
 }
 
 .header-title {
-    font-size: 2rem;
+    font-size: 1.875rem;
     font-weight: 700;
     margin-bottom: var(--spacing-xs);
+    position: relative;
+    z-index: 1;
+    letter-spacing: 0.05em;
 }
 
 .header-subtitle {
-    font-size: 1.125rem;
+    font-size: 1rem;
     font-weight: 400;
     opacity: 0.95;
+    position: relative;
+    z-index: 1;
 }
 
 /* ========================================
-   メインコンテンツ
+   メインコンテンツ - カードベース
    ======================================== */
 
 .main-content {
-    background-color: #ffffff;
-    border-radius: var(--border-radius-lg);
+    background-color: var(--color-card);
+    border-radius: var(--border-radius-xl);
     box-shadow: var(--shadow-lg);
     padding: var(--spacing-xl);
     margin-bottom: var(--spacing-xl);
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* ========================================
-   フォーム
+   フォーム - カードスタイル
    ======================================== */
 
 .availability-form {
@@ -137,7 +182,7 @@ body {
 
 .form-section {
     padding-bottom: var(--spacing-lg);
-    border-bottom: 2px solid var(--color-gray-100);
+    border-bottom: 1px solid var(--color-gray-100);
 }
 
 .form-section:last-of-type {
@@ -145,30 +190,48 @@ body {
 }
 
 .section-title {
-    font-size: 1.25rem;
-    font-weight: 600;
+    font-size: 1.125rem;
+    font-weight: 700;
     color: var(--color-primary-dark);
     margin-bottom: var(--spacing-lg);
-    padding-bottom: var(--spacing-sm);
-    border-bottom: 3px solid var(--color-primary);
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
 }
 
-/* フォームグループ */
+.section-title::before {
+    content: '';
+    width: 4px;
+    height: 1.5rem;
+    background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+    border-radius: var(--border-radius-full);
+}
+
+/* フォームグループ - カード風 */
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-xs);
+    gap: var(--spacing-sm);
+    background: var(--color-gray-50);
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius-lg);
+    transition: var(--transition);
+}
+
+.form-group:hover {
+    background: var(--color-primary-bg);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
 }
 
 .form-row {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--spacing-lg);
-    margin-bottom: var(--spacing-lg);
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
 }
 
-/* ラベル */
+/* ラベル - アイコン付き */
 .form-label {
     font-size: 0.875rem;
     font-weight: 600;
@@ -178,30 +241,39 @@ body {
     gap: var(--spacing-xs);
 }
 
+.label-icon {
+    font-size: 1.25rem;
+    display: inline-block;
+}
+
 .required {
     color: var(--color-error);
     font-weight: 700;
+    margin-left: var(--spacing-xs);
 }
 
-/* 入力フィールド */
+/* 入力フィールド - 大きめでタッチしやすく */
 .form-input,
 .form-select {
     width: 100%;
-    padding: var(--spacing-sm) var(--spacing-md);
+    min-height: 48px;
+    padding: var(--spacing-md) var(--spacing-lg);
     font-size: 1rem;
     font-family: var(--font-family);
     color: var(--color-text-primary);
-    background-color: #ffffff;
-    border: 2px solid var(--color-gray-300);
+    background-color: var(--color-card);
+    border: 2px solid var(--color-gray-200);
     border-radius: var(--border-radius-md);
-    transition: all 0.3s ease;
+    transition: var(--transition);
+    appearance: none;
 }
 
 .form-input:focus,
 .form-select:focus {
     outline: none;
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px var(--color-primary-lightest);
+    box-shadow: 0 0 0 4px var(--color-primary-lightest);
+    transform: scale(1.01);
 }
 
 .form-input:hover,
@@ -209,34 +281,65 @@ body {
     border-color: var(--color-primary-light);
 }
 
+/* Selectフィールド用の矢印アイコン */
+.form-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%233b82f6' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right var(--spacing-md) center;
+    background-size: 1rem;
+    padding-right: calc(var(--spacing-lg) + 1.5rem);
+}
+
 /* ヘルプテキスト */
 .form-help {
     font-size: 0.75rem;
     color: var(--color-gray-500);
+    margin-top: var(--spacing-xs);
 }
 
 /* ========================================
-   ボタン
+   ボタン - 大きく目立つデザイン
    ======================================== */
 
 .form-actions {
-    margin-top: var(--spacing-lg);
+    margin-top: var(--spacing-xl);
     text-align: center;
 }
 
 .btn {
     display: inline-block;
-    padding: var(--spacing-md) var(--spacing-2xl);
+    min-height: 56px;
+    padding: var(--spacing-lg) var(--spacing-3xl);
     font-size: 1.125rem;
-    font-weight: 600;
+    font-weight: 700;
     font-family: var(--font-family);
     text-align: center;
     text-decoration: none;
     border: none;
-    border-radius: var(--border-radius-md);
+    border-radius: var(--border-radius-full);
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:active::before {
+    width: 300px;
+    height: 300px;
 }
 
 .btn-primary {
@@ -246,13 +349,13 @@ body {
 
 .btn-primary:hover {
     background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-2px);
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-3px);
 }
 
 .btn-primary:active {
-    transform: translateY(0);
-    box-shadow: var(--shadow-sm);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
 }
 
 .btn-primary:disabled {
@@ -263,7 +366,7 @@ body {
 }
 
 /* ========================================
-   ローディング
+   ローディング - スムーズなアニメーション
    ======================================== */
 
 .loading {
@@ -271,17 +374,17 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: var(--spacing-2xl);
+    padding: var(--spacing-3xl);
     text-align: center;
 }
 
 .loading-spinner {
-    width: 48px;
-    height: 48px;
-    border: 4px solid var(--color-primary-lightest);
+    width: 64px;
+    height: 64px;
+    border: 5px solid var(--color-primary-lightest);
     border-top-color: var(--color-primary);
     border-radius: 50%;
-    animation: spin 1s linear infinite;
+    animation: spin 0.8s linear infinite;
 }
 
 @keyframes spin {
@@ -291,27 +394,28 @@ body {
 }
 
 .loading-text {
-    margin-top: var(--spacing-md);
-    font-size: 1rem;
-    font-weight: 500;
+    margin-top: var(--spacing-lg);
+    font-size: 1.125rem;
+    font-weight: 600;
     color: var(--color-primary);
 }
 
 /* ========================================
-   結果表示
+   結果表示 - ボトムシート風
    ======================================== */
 
 .result {
     margin-top: var(--spacing-xl);
     padding: var(--spacing-xl);
-    border-radius: var(--border-radius-lg);
-    animation: fadeIn 0.5s ease;
+    border-radius: var(--border-radius-xl);
+    animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-xl);
 }
 
-@keyframes fadeIn {
+@keyframes slideUp {
     from {
         opacity: 0;
-        transform: translateY(-10px);
+        transform: translateY(40px);
     }
     to {
         opacity: 1;
@@ -321,20 +425,20 @@ body {
 
 /* 成功メッセージ */
 .result.success {
-    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    background: linear-gradient(135deg, var(--color-success-light) 0%, #a7f3d0 100%);
     border: 2px solid var(--color-success);
 }
 
 /* エラーメッセージ */
 .result.error {
-    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    background: linear-gradient(135deg, var(--color-error-light) 0%, #fecaca 100%);
     border: 2px solid var(--color-error);
 }
 
 .result-title {
-    font-size: 1.25rem;
+    font-size: 1.375rem;
     font-weight: 700;
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
     display: flex;
     align-items: center;
     gap: var(--spacing-sm);
@@ -355,47 +459,59 @@ body {
 
 .vehicle-list {
     list-style: none;
-    margin: var(--spacing-md) 0;
-    padding: var(--spacing-md);
-    background-color: rgba(255, 255, 255, 0.6);
-    border-radius: var(--border-radius-md);
+    margin: var(--spacing-lg) 0;
+    padding: 0;
+    display: grid;
+    gap: var(--spacing-md);
 }
 
 .vehicle-item {
-    padding: var(--spacing-sm) 0;
+    padding: var(--spacing-lg);
     font-size: 1.125rem;
+    font-weight: 500;
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-md);
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.vehicle-item:hover {
+    transform: translateX(4px);
+    box-shadow: var(--shadow-md);
 }
 
 .result-note {
-    margin-top: var(--spacing-md);
-    padding: var(--spacing-md);
-    background-color: rgba(255, 255, 255, 0.8);
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background-color: rgba(255, 255, 255, 0.9);
     border-radius: var(--border-radius-md);
     font-size: 0.875rem;
     color: var(--color-gray-700);
     font-weight: 500;
+    text-align: center;
 }
 
-/* 予約リンク */
+/* 予約リンク - 目立つボタンスタイル */
 .reservation-link {
-    color: var(--color-primary);
+    display: inline-block;
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-md) var(--spacing-xl);
+    color: var(--color-text-white);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
     font-weight: 700;
     text-decoration: none;
-    padding: var(--spacing-xs) var(--spacing-sm);
-    border-radius: var(--border-radius-sm);
-    background-color: rgba(59, 130, 246, 0.1);
-    transition: all 0.3s ease;
-    display: inline-block;
+    border-radius: var(--border-radius-full);
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
 }
 
 .reservation-link:hover {
-    color: var(--color-primary-dark);
-    background-color: rgba(59, 130, 246, 0.2);
-    text-decoration: underline;
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
 }
 
 .reservation-link:active {
@@ -408,7 +524,7 @@ body {
 
 .footer {
     text-align: center;
-    padding: var(--spacing-lg);
+    padding: var(--spacing-xl);
     color: var(--color-gray-600);
 }
 
@@ -420,7 +536,7 @@ body {
     color: var(--color-primary);
     text-decoration: none;
     font-weight: 500;
-    transition: color 0.3s ease;
+    transition: var(--transition);
 }
 
 .footer-link:hover {
@@ -432,40 +548,23 @@ body {
    レスポンシブデザイン
    ======================================== */
 
-/* タブレット以下（768px以下） */
-@media (max-width: 768px) {
+/* タブレット以上（768px以上） */
+@media (min-width: 768px) {
     .container {
-        padding: var(--spacing-md);
-    }
-
-    .header {
-        padding: var(--spacing-lg) var(--spacing-md);
-    }
-
-    .header-title {
-        font-size: 1.5rem;
-    }
-
-    .header-subtitle {
-        font-size: 1rem;
-    }
-
-    .main-content {
-        padding: var(--spacing-lg);
-    }
-
-    .section-title {
-        font-size: 1.125rem;
+        padding: var(--spacing-xl);
     }
 
     .form-row {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-md);
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-lg);
     }
 
-    .btn {
-        width: 100%;
-        padding: var(--spacing-md) var(--spacing-lg);
+    .header-title {
+        font-size: 2.25rem;
+    }
+
+    .header-subtitle {
+        font-size: 1.125rem;
     }
 }
 
@@ -480,12 +579,12 @@ body {
     }
 
     .header {
-        padding: var(--spacing-md) var(--spacing-sm);
+        padding: var(--spacing-xl) var(--spacing-md);
         margin-bottom: var(--spacing-lg);
     }
 
     .header-title {
-        font-size: 1.25rem;
+        font-size: 1.5rem;
     }
 
     .header-subtitle {
@@ -493,15 +592,25 @@ body {
     }
 
     .main-content {
+        padding: var(--spacing-lg);
+    }
+
+    .form-group {
         padding: var(--spacing-md);
     }
 
+    .btn {
+        width: 100%;
+        padding: var(--spacing-lg) var(--spacing-xl);
+    }
+
     .result {
-        padding: var(--spacing-md);
+        padding: var(--spacing-lg);
     }
 
     .vehicle-item {
         font-size: 1rem;
+        padding: var(--spacing-md);
     }
 }
 
@@ -529,6 +638,17 @@ select:focus {
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border-width: 0;
+}
+
+/* リデュースモーション対応 */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }
 
 /* ========================================

@@ -11,6 +11,9 @@
 // 注意: 実際のDEPLOY_IDに置き換えてください
 const API_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxf4B6f19bUAifELWuUtxShErjdFWJv3kCQfwl_zW-yrrtFFMCzWohUkso2PkoY6Aqo/exec';
 
+// Google Form予約フォームのURL
+const GOOGLE_FORM_BASE_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSd0_mJDo7_MmBNmoV8g5FA4aiCMO-ZnqMSlS1sLKYEF8ML4Uw/viewform';
+
 // 車両タイプと絵文字のマッピング
 const VEHICLE_ICONS = {
     '軽自動車': '🚗',
@@ -24,6 +27,7 @@ const VEHICLE_ICONS = {
 // ========================================
 
 let form, loadingElement, resultElement;
+let currentFormData = null; // 現在のフォームデータを保持
 
 /**
  * DOMContentLoadedイベント - DOM読み込み完了時に実行
@@ -142,6 +146,9 @@ async function checkAvailability(data) {
         // ローディング表示
         showLoading();
 
+        // フォームデータを保存
+        currentFormData = data;
+
         // 貸出日時と返却日時をISO 8601形式に変換
         const pickupDateTime = `${data.pickupDate}T${data.pickupTime}:00`;
         const returnDateTime = `${data.returnDate}T${data.returnTime}:00`;
@@ -192,6 +199,28 @@ function buildApiUrl(params) {
         url.searchParams.append(key, params[key]);
     });
     return url.toString();
+}
+
+/**
+ * Google Form予約URLの作成（フォームデータの自動入力）
+ * @param {Object} formData - フォームデータ
+ * @returns {string} 完全なGoogle Form予約URL
+ */
+function buildFormUrl(formData) {
+    // 時刻のゼロ埋めを削除（09:00 → 9:00）
+    const pickupTime = formData.pickupTime.replace(/^0/, '');
+    const returnTime = formData.returnTime.replace(/^0/, '');
+
+    const params = new URLSearchParams({
+        'usp': 'pp_url',
+        'entry.504427043': formData.pickupDate,
+        'entry.1751100594': pickupTime,
+        'entry.1172919368': formData.pickupBranch,
+        'entry.1635880951': formData.returnDate,
+        'entry.618109326': returnTime,
+        'entry.633300787': formData.returnBranch
+    });
+    return `${GOOGLE_FORM_BASE_URL}?${params.toString()}`;
 }
 
 // ========================================
@@ -284,10 +313,22 @@ function displayAvailableResult(available) {
 
     resultElement.appendChild(vehicleList);
 
+    // 予約ボタンの作成
+    if (currentFormData) {
+        const formUrl = buildFormUrl(currentFormData);
+        const bookingButton = document.createElement('a');
+        bookingButton.href = formUrl;
+        bookingButton.target = '_blank';
+        bookingButton.rel = 'noopener noreferrer';
+        bookingButton.className = 'reservation-link';
+        bookingButton.innerHTML = '📝 ご予約はこちら';
+        resultElement.appendChild(bookingButton);
+    }
+
     // 注記
     const note = document.createElement('p');
     note.className = 'result-note';
-    note.innerHTML = 'この日程で予約可能です。ご予約の申し込みは<a href="https://docs.google.com/forms/d/e/1FAIpQLSd0_mJDo7_MmBNmoV8g5FA4aiCMO-ZnqMSlS1sLKYEF8ML4Uw/viewform?usp=header" target="_blank" rel="noopener noreferrer" class="reservation-link">こちら</a>';
+    note.textContent = 'この日程で予約可能です。上のボタンから予約フォームに入力した日時・店舗が自動入力されます。';
     resultElement.appendChild(note);
 }
 
