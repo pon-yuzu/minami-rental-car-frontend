@@ -12,14 +12,12 @@
 const API_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxf4B6f19bUAifELWuUtxShErjdFWJv3kCQfwl_zW-yrrtFFMCzWohUkso2PkoY6Aqo/exec';
 
 // Google Form予約フォームのURL
-const GOOGLE_FORM_BASE_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSd0_mJDo7_MmBNmoV8g5FA4aiCMO-ZnqMSlS1sLKYEF8ML4Uw/viewform';
+const GOOGLE_FORM_BASE_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSedbtgPQwMnGz-FGpNchCGh0iukiX-2a6TiL9_081A_Lu1yCw/viewform';
 
 // 車両タイプと絵文字のマッピング
 const VEHICLE_ICONS = {
     '軽自動車': '🚗',
-    '普通車': '🚙',
-    'ワゴン': '🚐',
-    'SUV': '🚙'
+    '一般乗用車': '🚙'
 };
 
 // ========================================
@@ -157,6 +155,7 @@ async function checkAvailability(data) {
         const url = buildApiUrl({
             action: 'checkAvailability',
             pickupBranch: data.pickupBranch,
+            returnBranch: data.returnBranch,
             pickupDateTime: pickupDateTime,
             returnDateTime: returnDateTime
         });
@@ -213,12 +212,12 @@ function buildFormUrl(formData) {
 
     const params = new URLSearchParams({
         'usp': 'pp_url',
-        'entry.504427043': formData.pickupDate,
-        'entry.1751100594': pickupTime,
-        'entry.1172919368': formData.pickupBranch,
-        'entry.1635880951': formData.returnDate,
-        'entry.618109326': returnTime,
-        'entry.633300787': formData.returnBranch
+        'entry.1435092602': formData.pickupDate,
+        'entry.131279204': pickupTime,
+        'entry.1888786569': formData.pickupBranch,
+        'entry.147933508': formData.returnDate,
+        'entry.1669227513': returnTime,
+        'entry.2017105635': formData.returnBranch
     });
     return `${GOOGLE_FORM_BASE_URL}?${params.toString()}`;
 }
@@ -273,7 +272,7 @@ function displayResult(result) {
 
     if (result.success && result.available) {
         // 在庫ありの場合
-        displayAvailableResult(result.available);
+        displayAvailableResult(result.available, result.pricing || null);
     } else {
         // 在庫なしまたはエラーの場合
         displayUnavailableResult(result.message);
@@ -286,8 +285,9 @@ function displayResult(result) {
 /**
  * 在庫ありの結果表示
  * @param {Object} available - 在庫データ
+ * @param {Object} pricing - 料金データ
  */
-function displayAvailableResult(available) {
+function displayAvailableResult(available, pricing) {
     resultElement.className = 'result success';
 
     // タイトル
@@ -313,6 +313,49 @@ function displayAvailableResult(available) {
 
     resultElement.appendChild(vehicleList);
 
+    // 料金情報を表示
+    if (pricing) {
+        const priceSection = document.createElement('div');
+        priceSection.className = 'price-section';
+
+        let priceHTML = `
+            <div class="price-info">
+                <h4>💰 レンタル料金</h4>
+                <div class="price-total">¥${pricing.rentalFee.toLocaleString()}（${pricing.rentalDays}日間）</div>
+        `;
+
+        // 内訳
+        if (pricing.breakdown && pricing.breakdown.length > 0) {
+            priceHTML += '<div class="price-breakdown">';
+            pricing.breakdown.forEach(item => {
+                priceHTML += `<div class="breakdown-item">- ${item.item}: ¥${item.amount.toLocaleString()}</div>`;
+            });
+            priceHTML += '</div>';
+        }
+
+        // ガソリンポリシー
+        priceHTML += `<div class="fuel-policy">⛽ ${pricing.fuelPolicy}</div>`;
+
+        // 乗り捨て特典
+        if (pricing.hasOneWayBonus && pricing.oneWayBonusMessage) {
+            priceHTML += `<div class="oneway-bonus">${pricing.oneWayBonusMessage}</div>`;
+        }
+
+        priceHTML += '</div>';
+        priceSection.innerHTML = priceHTML;
+        resultElement.appendChild(priceSection);
+    }
+
+    // 注記
+    const note = document.createElement('p');
+    note.className = 'result-note';
+    note.innerHTML = `
+        ※ 表示料金は全車種共通です<br>
+        ※ 空港送迎無料<br>
+        ※ 奄美空港店ではカード決済可能
+    `;
+    resultElement.appendChild(note);
+
     // 予約ボタンの作成
     if (currentFormData) {
         const formUrl = buildFormUrl(currentFormData);
@@ -324,12 +367,6 @@ function displayAvailableResult(available) {
         bookingButton.innerHTML = '📝 ご予約はこちら';
         resultElement.appendChild(bookingButton);
     }
-
-    // 注記
-    const note = document.createElement('p');
-    note.className = 'result-note';
-    note.textContent = 'この日程で予約可能です。上のボタンから予約フォームに入力した日時・店舗が自動入力されます。';
-    resultElement.appendChild(note);
 }
 
 /**
